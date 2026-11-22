@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YOUR SHOP — Luxury Timepieces</title>
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --surface: #FFFFFF;
+      --beige: #F3ECE1;
+      --border: #E5D9C7;
+      --text: #1F1916;
+      --muted: #6E6257;
+      --gold: #9A7643;
+      --green: #1E6B45;
+      --red: #B83227;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    a, button { touch-action: manipulation; cursor: pointer; font-family: inherit; }
+
+    /* Promo Bar */
+    .promo-bar {
+      background: var(--text);
+      color: #FAF7F2;
+      text-align: center;
+      padding: 9px 12px;
+      font-size: 12px;
+      letter-spacing: 0.4px;
+    }
+    .promo-bar strong { color: #E8C99B; }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .brand span { color: var(--gold); }
+    .bag-btn {
+      background: var(--text);
+      color: #FFF;
+      border: none;
+      padding: 9px 15px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Filter & Coupon Strip */
+    .toolbar {
+      max-width: 1200px;
+      margin: 18px auto 0;
+      padding: 0 16px;
+    }
+    .coupon-banner {
+      background: var(--beige);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .coupon-banner h2 { font-size: 15px; font-weight: 700; }
+    .coupon-banner p { font-size: 13px; color: var(--muted); }
+    .coupon-btn {
+      background: var(--gold);
+      color: #FFF;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .coupon-btn.applied { background: var(--green); }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .filter-pill {
+      white-space: nowrap;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .filter-pill.active {
+      background: var(--text);
+      color: #FFF;
+      border-color: var(--text);
+    }
+
+    /* Product Grid */
+    .grid {
+      max-width: 1200px;
+      margin: 16px auto 50px;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 18px rgba(31, 25, 22, 0.04);
+    }
+    .media-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 4.2;
+      background: var(--beige);
+      overflow: hidden;
+    }
+    .media-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .badge-hot {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--red);
+      color: #FFF;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.4px;
+    }
+    .badge-type {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .play-video-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(31, 25, 22, 0.92);
+      color: #FFF;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 10px;
+    }
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .watch-title { font-size: 17px; font-weight: 700; line-height: 1.3; }
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .price-now { font-size: 21px; font-weight: 800; color: var(--text); }
+    .price-mrp { font-size: 14px; color: var(--muted); text-decoration: line-through; }
+    .price-save {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      background: #E8F5EE;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .features-list {
+      list-style: none;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .features-list li::before {
+      content: "✓ ";
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .review-box {
+      background: var(--beige);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .stars { color: #C58B2A; }
+
+    .card-actions {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding-top: 6px;
+    }
+    .btn-cart {
+      background: var(--beige);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 11px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .btn-buy {
+      background: var(--gold);
+      color: #FFF;
+      text-decoration: none;
+      text-align: center;
+      padding: 11px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 16, 14, 0.78);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card {
+      background: var(--surface);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .modal-head {
+      padding: 14px 16px;
+      background: var(--beige);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-head h3 { font-size: 15px; font-weight: 700; }
+    .close-btn {
+      background: var(--text);
+      color: #FFF;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 16px;
+    }
+    video {
+      width: 100%;
+      max-height: 70vh;
+      background: #000;
+      display: block;
+    }
+
+    /* Cart Drawer */
+    .cart-body { padding: 16px; max-height: 60vh; overflow-y: auto; }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+    }
+    .cart-footer {
+      padding: 16px;
+      background: var(--beige);
+      border-top: 1px solid var(--border);
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 10px 0 14px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .pay-now-full {
+      display: block;
+      width: 100%;
+      background: var(--green);
+      color: #FFF;
+      text-decoration: none;
+      text-align: center;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="promo-bar">
+    HOT DEALS: MRP ₹12,000 SLASHED TO ₹3,888 • USE CODE <strong>WATCH10</strong> FOR ₹3,499 FINAL PRICE
+  </div>
+
+  <header>
+    <div class="brand">YOUR <span>SHOP</span></div>
+    <button class="bag-btn" id="openBagBtn">Bag (<span id="bagCount">1</span>)</button>
+  </header>
+
+  <div class="toolbar">
+    <div class="coupon-banner">
+      <div>
+        <h2>Extra 10% OFF Coupon: WATCH10</h2>
+        <p>Drops every ₹3,888 watch down to <strong>₹3,499</strong> at checkout.</p>
+      </div>
+      <button class="coupon-btn" id="applyCouponBtn">Apply WATCH10</button>
+    </div>
+
+    <div class="filter-row" id="filterRow">
+      <button class="filter-pill active" data-cat="All">All Watches (5)</button>
+      <button class="filter-pill" data-cat="Automatic">Automatic</button>
+      <button class="filter-pill" data-cat="Chronograph">Chronograph</button>
+      <button class="filter-pill" data-cat="Skeleton">Skeleton Automatic</button>
+      <button class="filter-pill" data-cat="Mechanical">Mechanical</button>
+    </div>
+  </div>
+
+  <main class="grid" id="watchGrid">
+
+    <!-- Watch 1: Rolex Batman -->
+    <article class="card" data-category="Automatic">
+      <div class="media-box">
+        <span class="badge-hot">HOT DEAL</span>
+        <span class="badge-type">Automatic</span>
+        <img data-bases="watch1,1000031550_2,1000031550" src="./watch1.jpg" alt="Rolex GMT-Master II Batman" />
+        <button class="play-video-btn" data-title="ROLEX — GMT-Master II Batman" data-vbases="video1,1000031553_2,1000031553">▶ Play Video</button>
+      </div>
+      <div class="card-body">
+        <div class="brand-tag">ROLEX</div>
+        <h3 class="watch-title">GMT-Master II &quot;Batman&quot; Oyster Perpetual</h3>
+        <div class="price-row">
+          <span class="price-now" data-price>₹3,888</span>
+          <span class="price-mrp">₹12,000</span>
+          <span class="price-save" data-save>68% OFF • ₹3,499 w/ WATCH10</span>
+        </div>
+        <ul class="features-list">
+          <li>Bi-directional black &amp; royal blue 24-hour GMT bezel</li>
+          <li>904L stainless steel Jubilee bracelet with Oysterlock clasp</li>
+          <li>Cyclops date magnifier at 3 o'clock &amp; Chromalight markers</li>
+        </ul>
+        <div class="review-box">
+          <div class="review-header"><span>Aarav M. • Verified Buyer</span><span class="stars">★★★★★ (4.9)</span></div>
+          <p>Heavy Jubilee links and the blue-black bezel shine just like the video.</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn-cart" data-add="1">+ Add to Bag</button>
+          <a href="https://rzp.io/rzp/whHgrR5" target="_top" rel="noopener noreferrer" class="btn-buy">Buy Now</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Watch 2: Rolex Daytona Gold -->
+    <article class="card" data-category="Chronograph">
+      <div class="media-box">
+        <span class="badge-hot">HOT DEAL</span>
+        <span class="badge-type">Chronograph</span>
+        <img data-bases="watch2,1000031556_2,1000031556" src="./watch2.webp" alt="Rolex Cosmograph Daytona Gold" />
+        <button class="play-video-btn" data-title="ROLEX — Cosmograph Daytona Gold" data-vbases="video2,1000031587_2,1000031587">▶ Play Video</button>
+      </div>
+      <div class="card-body">
+        <div class="brand-tag">ROLEX</div>
+        <h3 class="watch-title">Cosmograph Daytona Gold Edition</h3>
+        <div class="price-row">
+          <span class="price-now" data-price>₹3,888</span>
+          <span class="price-mrp">₹12,000</span>
+          <span class="price-save" data-save>68% OFF • ₹3,499 w/ WATCH10</span>
+        </div>
+        <ul class="features-list">
+          <li>18k yellow-gold PVD Oyster case &amp; engraved tachymeter bezel</li>
+          <li>Tri-compax chronograph sub-dials with screw-down pushers</li>
+          <li>Scratch-resistant sapphire crystal &amp; solid Oyster bracelet</li>
+        </ul>
+        <div class="review-box">
+          <div class="review-header"><span>Rohan K. • Verified Buyer</span><span class="stars">★★★★★ (4.9)</span></div>
+          <p>Gold finish looks rich in person and the chronograph pushers feel solid.</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn-cart" data-add="2">+ Add to Bag</button>
+          <a href="https://rzp.io/rzp/whHgrR5" target="_top" rel="noopener noreferrer" class="btn-buy">Buy Now</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Watch 3: Tommy Hilfiger Skeleton -->
+    <article class="card" data-category="Skeleton">
+      <div class="media-box">
+        <span class="badge-hot">HOT DEAL</span>
+        <span class="badge-type">Skeleton</span>
+        <img data-bases="watch3,1000031562_2,1000031562" src="./watch3.webp" alt="Tommy Hilfiger Skeleton Automatic" />
+        <button class="play-video-btn" data-title="TOMMY HILFIGER — Skeleton Automatic" data-vbases="video3,1000031576_2,1000031576">▶ Play Video</button>
+      </div>
+      <div class="card-body">
+        <div class="brand-tag">TOMMY HILFIGER</div>
+        <h3 class="watch-title">Open-Heart Skeleton Automatic Gold</h3>
+        <div class="price-row">
+          <span class="price-now" data-price>₹3,888</span>
+          <span class="price-mrp">₹12,000</span>
+          <span class="price-save" data-save>68% OFF • ₹3,499 w/ WATCH10</span>
+        </div>
+        <ul class="features-list">
+          <li>Exposed skeleton dial showcasing gold automatic balance wheel</li>
+          <li>Brushed &amp; polished gold-tone stainless steel link bracelet</li>
+          <li>Transparent exhibition caseback with self-winding rotor</li>
+        </ul>
+        <div class="review-box">
+          <div class="review-header"><span>Siddharth V. • Verified Buyer</span><span class="stars">★★★★★ (4.8)</span></div>
+          <p>Watching the open-heart gear train move on the wrist is mesmerizing.</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn-cart" data-add="3">+ Add to Bag</button>
+          <a href="https://rzp.io/rzp/whHgrR5" target="_top" rel="noopener noreferrer" class="btn-buy">Buy Now</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Watch 4: Cartier Moonphase Tourbillon -->
+    <article class="card" data-category="Mechanical">
+      <div class="media-box">
+        <span class="badge-hot">HOT DEAL</span>
+        <span class="badge-type">Mechanical</span>
+        <img data-bases="watch4,1000031568_2,1000031568" src="./watch4.webp" alt="Cartier Rotonde Moonphase Tourbillon" />
+        <button class="play-video-btn" data-title="CARTIER — Rotonde Moonphase Tourbillon" data-vbases="video4,1000031571_2,1000031571">▶ Play Video</button>
+      </div>
+      <div class="card-body">
+        <div class="brand-tag">CARTIER</div>
+        <h3 class="watch-title">Rotonde Moonphase Tourbillon Arabic Dial</h3>
+        <div class="price-row">
+          <span class="price-now" data-price>₹3,888</span>
+          <span class="price-mrp">₹12,000</span>
+          <span class="price-save" data-save>68% OFF • ₹3,499 w/ WATCH10</span>
+        </div>
+        <ul class="features-list">
+          <li>Eastern Arabic numeral dial with sun-and-moon phase indicator</li>
+          <li>Open-worked 6 o'clock tourbillon cage &amp; day/date sub-dials</li>
+          <li>Rose-gold PVD case paired with brown alligator-embossed strap</li>
+        </ul>
+        <div class="review-box">
+          <div class="review-header"><span>Kabir S. • Verified Buyer</span><span class="stars">★★★★★ (5.0)</span></div>
+          <p>The Arabic numerals and rose gold leather combo make it stand out immediately.</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn-cart" data-add="4">+ Add to Bag</button>
+          <a href="https://rzp.io/rzp/whHgrR5" target="_top" rel="noopener noreferrer" class="btn-buy">Buy Now</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Watch 5: Invicta Dragon -->
+    <article class="card" data-category="Chronograph">
+      <div class="media-box">
+        <span class="badge-hot">HOT DEAL</span>
+        <span class="badge-type">Chronograph</span>
+        <img data-bases="watch5,1000031579_2,1000031579" src="./watch5.webp" alt="Invicta Reserve Venom Dragon" />
+        <button class="play-video-btn" data-title="INVICTA — Reserve Venom Dragon Edition" data-vbases="video5,1000031588_2,1000031588">▶ Play Video</button>
+      </div>
+      <div class="card-body">
+        <div class="brand-tag">INVICTA</div>
+        <h3 class="watch-title">Reserve Venom Dragon Edition Gold &amp; Black</h3>
+        <div class="price-row">
+          <span class="price-now" data-price>₹3,888</span>
+          <span class="price-mrp">₹12,000</span>
+          <span class="price-save" data-save>68% OFF • ₹3,499 w/ WATCH10</span>
+        </div>
+        <ul class="features-list">
+          <li>3D sculpted golden dragon relief across deep navy chronograph dial</li>
+          <li>52mm bold Reserve case with black textured bezel accents</li>
+          <li>Heavy-duty gold-tone stainless steel bracelet with diver clasp</li>
+        </ul>
+        <div class="review-box">
+          <div class="review-header"><span>Vikram D. • Verified Buyer</span><span class="stars">★★★★★ (4.9)</span></div>
+          <p>Massive wrist presence and crisp 3D dragon detailing.</p>
+        </div>
+        <div class="card-actions">
+          <button class="btn-cart" data-add="5">+ Add to Bag</button>
+          <a href="https://rzp.io/rzp/whHgrR5" target="_top" rel="noopener noreferrer" class="btn-buy">Buy Now</a>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Video Modal -->
+  <div class="modal-backdrop" id="videoModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="videoModalTitle">Watch Video Showcase</h3>
+        <button class="close-btn" id="closeVideoBtn">&times;</button>
+      </div>
+      <video id="watchVideoPlayer" controls playsinline preload="metadata"></video>
+      <div id="videoErrorMsg" style="display:none;padding:16px;font-size:13px;color:var(--red);text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- Cart & Razorpay Checkout Modal -->
+  <div class="modal-backdrop" id="bagModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Your Shopping Bag</h3>
+        <button class="close-btn" id="closeBagBtn">&times;</button>
+      </div>
+      <div class="cart-body" id="cartItemsContainer"></div>
+      <div class="cart-footer">
+        <div class="summary-line"><span>MRP Total</span><span id="mrpTotal">₹12,000</span></div>
+        <div class="summary-line"><span>Deal Subtotal</span><span id="subTotal">₹3,888</span></div>
+        <div class="summary-line" style="color:var(--green);font-weight:700;">
+          <span>Coupon (WATCH10 - 10% OFF)</span><span id="discountTotal">-₹0</span>
+        </div>
+        <div class="summary-total"><span>Payable Total</span><span id="finalTotal">₹3,888</span></div>
+        <a href="https://rzp.io/rzp/whHgrR5" target="_top" rel="noopener noreferrer" class="pay-now-full">
+          Pay Now via Razorpay (rzp.io/rzp/whHgrR5)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Auto-resolve image filenames across .jpg, .jpeg, .png, .webp and uppercase variants
+    document.querySelectorAll("img[data-bases]").forEach(function (img) {
+      var bases = img.getAttribute("data-bases").split(",");
+      var exts = [".jpg", ".webp", ".jpeg", ".png", ".JPG", ".WEBP", ".JPEG", ".PNG"];
+      var candidates = [];
+      bases.forEach(function (b) {
+        exts.forEach(function (ext) {
+          candidates.push("./" + b + ext);
+        });
+      });
+      var idx = 0;
+      img.onerror = function () {
+        idx++;
+        if (idx < candidates.length) {
+          img.src = candidates[idx];
+        } else {
+          img.onerror = null;
+        }
+      };
+      img.src = candidates[0];
+    });
+
+    var NAMES = {
+      1: { brand: "ROLEX", name: 'GMT-Master II "Batman" Oyster Perpetual' },
+      2: { brand: "ROLEX", name: "Cosmograph Daytona Gold Edition" },
+      3: { brand: "TOMMY HILFIGER", name: "Open-Heart Skeleton Automatic Gold" },
+      4: { brand: "CARTIER", name: "Rotonde Moonphase Tourbillon Arabic Dial" },
+      5: { brand: "INVICTA", name: "Reserve Venom Dragon Edition Gold & Black" }
+    };
+
+    var couponApplied = false;
+    var cart = [1];
+
+    function updatePrices() {
+      var priceText = couponApplied ? "₹3,499" : "₹3,888";
+      var saveText = couponApplied ? "WATCH10 APPLIED • ₹3,499" : "68% OFF • ₹3,499 w/ WATCH10";
+      document.querySelectorAll("[data-price]").forEach(function (el) { el.textContent = priceText; });
+      document.querySelectorAll("[data-save]").forEach(function (el) { el.textContent = saveText; });
+    }
+
+    function updateCartUI() {
+      document.getElementById("bagCount").textContent = cart.length;
+      var container = document.getElementById("cartItemsContainer");
+      if (cart.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:24px 0;">Your bag is empty.</p>';
+      } else {
+        container.innerHTML = cart.map(function (id, idx) {
+          var w = NAMES[id];
+          return '<div class="cart-item">' +
+            '<div><div style="font-size:11px;font-weight:700;color:var(--gold);">' + w.brand + '</div>' +
+            '<div style="font-size:14px;font-weight:700;">' + w.name + '</div>' +
+            '<div style="font-size:13px;color:var(--muted);"><s>₹12,000</s> → <strong>₹3,888</strong></div></div>' +
+            '<button data-remove="' + idx + '" style="border:1px solid var(--border);background:#FFF;padding:5px 10px;border-radius:6px;font-size:12px;">Remove</button>' +
+          '</div>';
+        }).join("");
+      }
+      var mrp = cart.length * 12000;
+      var sub = cart.length * 3888;
+      var disc = couponApplied ? cart.length * 389 : 0;
+      document.getElementById("mrpTotal").textContent = "₹" + mrp.toLocaleString("en-IN");
+      document.getElementById("subTotal").textContent = "₹" + sub.toLocaleString("en-IN");
+      document.getElementById("discountTotal").textContent = "-₹" + disc.toLocaleString("en-IN");
+      document.getElementById("finalTotal").textContent = "₹" + (sub - disc).toLocaleString("en-IN");
+    }
+
+    document.addEventListener("click", function (e) {
+      var catBtn = e.target.closest(".filter-pill");
+      if (catBtn) {
+        document.querySelectorAll(".filter-pill").forEach(function (b) { b.classList.remove("active"); });
+        catBtn.classList.add("active");
+        var cat = catBtn.getAttribute("data-cat");
+        document.querySelectorAll(".card").forEach(function (card) {
+          card.style.display = (cat === "All" || card.getAttribute("data-category") === cat) ? "flex" : "none";
+        });
+        return;
+      }
+
+      var playBtn = e.target.closest("[data-vbases]");
+      if (playBtn) {
+        var modal = document.getElementById("videoModal");
+        var player = document.getElementById("watchVideoPlayer");
+        var errBox = document.getElementById("videoErrorMsg");
+        document.getElementById("videoModalTitle").textContent = playBtn.getAttribute("data-title");
+        errBox.style.display = "none";
+
+        var vbases = playBtn.getAttribute("data-vbases").split(",");
+        var vexts = [".mp4", ".MP4", ".mov", ".MOV", ".webm"];
+        var vlist = [];
+        vbases.forEach(function (b) { vexts.forEach(function (ext) { vlist.push("./" + b + ext); }); });
+
+        var vIdx = 0;
+        function tryNextVideo() {
+          if (vIdx >= vlist.length) {
+            errBox.textContent = "Video file not found in repository. Ensure " + vbases[0] + ".mp4 is uploaded in the main folder.";
+            errBox.style.display = "block";
+            return;
+          }
+          player.src = vlist[vIdx++];
+          player.load();
+          player.play().catch(function () {});
+        }
+        player.onerror = tryNextVideo;
+        modal.classList.add("open");
+        tryNextVideo();
+        return;
+      }
+
+      var addBtn = e.target.closest("[data-add]");
+      if (addBtn) {
+        cart.push(Number(addBtn.getAttribute("data-add")));
+        updateCartUI();
+        document.getElementById("bagModal").classList.add("open");
+        return;
+      }
+
+      var remBtn = e.target.closest("[data-remove]");
+      if (remBtn) {
+        cart.splice(Number(remBtn.getAttribute("data-remove")), 1);
+        updateCartUI();
+      }
+    });
+
+    document.getElementById("applyCouponBtn").addEventListener("click", function () {
+      couponApplied = !couponApplied;
+      this.textContent = couponApplied ? "WATCH10 Applied (10% OFF)" : "Apply WATCH10";
+      this.classList.toggle("applied", couponApplied);
+      updatePrices();
+      updateCartUI();
+    });
+
+    document.getElementById("openBagBtn").addEventListener("click", function () {
+      updateCartUI();
+      document.getElementById("bagModal").classList.add("open");
+    });
+
+    document.getElementById("closeBagBtn").addEventListener("click", function () {
+      document.getElementById("bagModal").classList.remove("open");
+    });
+
+    function closeVideo() {
+      var player = document.getElementById("watchVideoPlayer");
+      player.pause();
+      player.removeAttribute("src");
+      document.getElementById("videoModal").classList.remove("open");
+    }
+
+    document.getElementById("closeVideoBtn").addEventListener("click", closeVideo);
+    document.getElementById("videoModal").addEventListener("click", function (e) {
+      if (e.target === this) closeVideo();
+    });
+    document.getElementById("bagModal").addEventListener("click", function (e) {
+      if (e.target === this) this.classList.remove("open");
+    });
+
+    updateCartUI();
+  </script>
+</body>
+</html>
