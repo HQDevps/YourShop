@@ -1,2 +1,2 @@
 # YourShop
-A diverse websites for stylish and premium watches
+A diverse website for stylish and premium watches
